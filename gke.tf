@@ -31,6 +31,8 @@ resource "google_container_cluster" "primary" {
     workload_pool = "${var.gcp_project}.svc.id.goog"
   }
 
+  deletion_protection = false
+
 }
 
 # Separately Managed Node Pool

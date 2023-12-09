@@ -1,4 +1,4 @@
-output "rcp_region" {
+output "gcp_region" {
   value       = var.gcp_region
   description = "Google Cloud Region"
 }

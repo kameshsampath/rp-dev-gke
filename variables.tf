@@ -9,11 +9,11 @@ variable "gcp_region" {
 
 variable "cluster_name" {
   description = "the gke cluster name"
-  default     = "my-demos"
+  default     = "redpanda-dev"
 }
 
 variable "gke_num_nodes" {
-  default     = 2
+  default     = 3
   description = "number of gke nodes"
 }
 

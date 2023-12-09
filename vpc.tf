@@ -1,8 +1,3 @@
-provider "google" {
-  project = var.gcp_project
-  region  = var.gcp_region
-}
-
 # VPC
 resource "google_compute_network" "vpc" {
   name                    = "${var.cluster_name}-vpc"

@@ -1,13 +1,3 @@
-# This is used to set local variable google_zone.
-data "google_compute_zones" "available" {
-  region = var.gcp_region
-}
-
-data "google_container_engine_versions" "supported" {
-  location       = local.google_zone
-  version_prefix = var.kubernetes_version
-}
-
 resource "random_shuffle" "az" {
   input        = data.google_compute_zones.available.names
   result_count = 1

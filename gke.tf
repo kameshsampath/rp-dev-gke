@@ -74,17 +74,3 @@ resource "google_container_node_pool" "primary_nodes" {
     }
   }
 }
-
-resource "local_file" "kubeconfig" {
-  content = templatefile("${path.module}/templates/kubeconfig-template.tfpl", {
-    cluster_name    = google_container_cluster.primary.name
-    endpoint        = google_container_cluster.primary.endpoint
-    cluster_ca      = google_container_cluster.primary.master_auth[0].cluster_ca_certificate
-    client_cert     = google_container_cluster.primary.master_auth[0].client_certificate
-    client_cert_key = google_container_cluster.primary.master_auth[0].client_key
-  })
-  filename             = "${path.module}/.kube/config"
-  file_permission      = 0600
-  directory_permission = 0700
-}
-

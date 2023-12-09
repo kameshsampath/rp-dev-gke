@@ -23,8 +23,3 @@ output "kubernetes_cluster_host" {
   description = "GKE Cluster Host"
 }
 
-output "kubeconfig_path" {
-  value       = abspath(local_file.kubeconfig.filename)
-  description = "Kubeconfig file"
-}
-

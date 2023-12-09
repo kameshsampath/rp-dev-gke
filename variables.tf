@@ -36,7 +36,6 @@ variable "release_channel" {
   default     = "stable"
 }
 
-
 variable "redpanda_runner_sa" {
   description = "The Google Cloud SA that will be used with Redpanda Cluster"
   type        = string
@@ -44,8 +43,14 @@ variable "redpanda_runner_sa" {
 }
 
 variable "redpanda_namespace" {
-  description = "The Namespace where Redpanda Cluster will be deployed"
+  description = "The namespace where Redpanda Operator controller and cluster will be deployed"
   type        = string
   default     = "redpanda"
+}
+
+variable "redpanda_image_repository" {
+  description = "The container image repository for Redpanda images"
+  type        = string
+  default     = "docker.redpanda.com/redpandadata/redpanda-operator"
 }
 

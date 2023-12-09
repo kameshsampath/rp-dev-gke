@@ -1,6 +1,6 @@
 # This is used to set local variable google_zone.
 data "google_compute_zones" "available" {
-  region = var.region
+  region = var.gcp_region
 }
 
 data "google_container_engine_versions" "supported" {
@@ -38,8 +38,9 @@ resource "google_container_cluster" "primary" {
 
   # workload identity config
   workload_identity_config {
-    workload_pool = "${var.project_id}.svc.id.goog"
+    workload_pool = "${var.gcp_project}.svc.id.goog"
   }
+
 }
 
 # Separately Managed Node Pool
@@ -56,18 +57,23 @@ resource "google_container_node_pool" "primary_nodes" {
     ]
 
     labels = {
-      env = var.project_id
+      env = var.gcp_project
     }
 
     # preemptible  = true
     machine_type = var.machine_type
-    tags         = ["gke-node", "${var.project_id}-gke"]
+    tags         = ["gke-node", "${var.gcp_project}-gke", "redpanda-node"]
     metadata = {
       disable-legacy-endpoints = "true"
     }
+
+    # https://cloud.google.com/compute/docs/disks/local-ssd
+    # https://docs.redpanda.com/current/deploy/deployment-option/self-hosted/kubernetes/kubernetes-cluster-requirements/?tab=tabs-1-gke
+    ephemeral_storage_local_ssd_config {
+      local_ssd_count = 2
+    }
   }
 }
-
 
 resource "local_file" "kubeconfig" {
   content = templatefile("${path.module}/templates/kubeconfig-template.tfpl", {

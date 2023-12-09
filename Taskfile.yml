@@ -1,0 +1,84 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  TFVARS_FILE: .local.tfvars
+
+dotenv:
+  - .env
+
+tasks:
+  default:
+    desc: Creates GKE cluster suitable for deploying Redpanda Dev cluster
+    cmds:
+      - task: create_cluster
+    silent: true
+
+  clean:
+    desc: Clean all terraform artifacts/assets
+    silent: true
+    cmds:
+      - rm -rf .terraform .terraform.lock.hcl
+
+  format:
+    desc: Format terraform files
+    silent: true
+    cmds:
+      - terraform fmt --recursive {{.ROOT_DIR}}
+
+  init:
+    desc: Init terraform working directory
+    silent: true
+    cmds:
+      - mkdir -p {{.ROOT_DIR}}/.kube
+      - terraform init {{.CLI_ARGS}}
+
+  validate:
+    silent: true
+    desc: Validate the terraform resources
+    deps:
+      - format
+    cmds:
+      - terraform validate
+
+  create_cluster:
+    silent: true
+    desc: Create the GKE cluster
+    aliases:
+      - create
+      - deploy
+    cmds:
+      - terraform apply -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
+
+  get_kubeconfig:
+    silent: true
+    desc: Get kubeconfig of the cluster
+    aliases:
+      - kubeconfig
+    generates:
+      - "{{.ROOT_DIR}}/.kube/config"
+    cmds:
+      - mkdir -p {{.ROOT_DIR}}/.kube
+      - gcloud container clusters get-credentials {{.CLUSTER_NAME}} --zone={{.CLUSTER_ZONE}}
+    vars:
+      CLUSTER_NAME:
+        sh: terraform output -raw kubernetes-cluster-name
+      CLUSTER_ZONE:
+        sh: terraform output -raw zone
+
+  destroy:
+    silent: true
+    desc: Destroys terraform resources
+    aliases:
+      - delete
+      - cleanup
+    cmds:
+      - terraform destroy -var-file={{.TFVARS_FILE}} {{.CLI_ARGS}}
+      - echo '' > {{.ROOT_DIR}}/.kube/config
+
+  readme:
+    desc: Build the README
+    silent: true
+    cmds:
+      - terraform-docs {{.ROOT_DIR}} > {{.ROOT_DIR}}/README.md

@@ -1,16 +1,16 @@
-output "region" {
-  value       = var.region
-  description = "GCloud Region"
+output "rcp_region" {
+  value       = var.gcp_region
+  description = "Google Cloud Region"
 }
 
-output "project_id" {
-  value       = var.project_id
-  description = "GCloud Project ID"
+output "gcp_project" {
+  value       = var.gcp_region
+  description = "Google Cloud Project ID"
 }
 
 output "zone" {
   value       = local.google_zone
-  description = "GCloud Zone"
+  description = "Google Cloud Zone"
 }
 
 output "kubernetes_cluster_name" {

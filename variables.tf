@@ -1,9 +1,9 @@
-variable "project_id" {
-  description = "project id"
+variable "gcp_project" {
+  description = "The Google Cloud Project"
 }
 
-variable "region" {
-  description = "the region or zone where the cluster will be created"
+variable "gcp_region" {
+  description = "The Google Cloud Region where the cluster will be created"
   default     = "asia-south1"
 }
 
@@ -34,5 +34,18 @@ variable "release_channel" {
   description = "the GKE release channel to use"
   type        = string
   default     = "stable"
+}
+
+
+variable "redpanda_runner_sa" {
+  description = "The Google Cloud SA that will be used with Redpanda Cluster"
+  type        = string
+  default     = "rp-dev-sa"
+}
+
+variable "redpanda_namespace" {
+  description = "The Namespace where Redpanda Cluster will be deployed"
+  type        = string
+  default     = "redpanda"
 }
 
